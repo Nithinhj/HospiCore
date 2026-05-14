@@ -25,69 +25,8 @@ public class Login {
 			if (rSet.next()) {
 				String role = rSet.getString("role");
 				if (role.equalsIgnoreCase("Admin")) {
-					System.out.println("Welcome to HospiCore Admin");
-					int choice;
-					do {
-						System.out.println("1.Manage Rooms");
-						System.out.println("2.Booking");
-						System.out.println("3.Exit");
-						System.out.println("Enter your Choice");
-						choice = scanner.nextInt();
-						switch (choice) {
-						case 1:
-							int subChoice;
-							do {
-								System.out.println("1.Add Room");
-								System.out.println("2.View Room");
-								System.out.println("3.Update Room");
-								System.out.println("4.Delete Room");
-								System.out.println("5.Go back");
-								System.out.println("Enter Your Choice");
-								subChoice = scanner.nextInt();
-
-								switch (subChoice) {
-								case 1:
-									RoomManagement.addRoom(con, scanner);
-
-									break;
-								case 2:
-									RoomManagement.viewRoom(con);
-									break;
-									case 3:
-										RoomManagement.updateRoom(con, scanner);
-										break;
-										case 4:
-											RoomManagement.deleteRoom(con, scanner);
-											break;
-											
-								case 5:
-									
-									System.out.println("Going back....");
-									break;
-
-								default:
-
-									break;
-								}
-
-							} while (subChoice != 3);
-							break;
-
-						case 2:
-
-							break;
-						case 3:
-							System.out.println("Exiting...");
-
-							break;
-
-						default:
-							System.out.println("Invalid choice");
-							break;
-						}
-
-					} while (choice != 3);
-
+					
+					Admin.AdminMenu(con, scanner);
 				} else if (role.equalsIgnoreCase("Front_Office")) {
 					System.out.println("Welcome to HospiCore Front Office");
 					int choice;

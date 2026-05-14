@@ -69,7 +69,7 @@ public class RoomManagement  {
 	}
 
 }
-	public static void updateRoom(Connection con , Scanner scanner) throws SQLException {
+	public static void updateRoom(Connection connection , Scanner scanner) throws SQLException {
 		System.out.println("Enter Room Number");
 		int RoomNumber=scanner.nextInt();
 		scanner.nextLine();
@@ -82,7 +82,7 @@ public class RoomManagement  {
 
 		
 		String updateQuery="update room set Room_Type=?,Price=? where  Room_Number =?";
-		PreparedStatement pStatement=con.prepareStatement(updateQuery);
+		PreparedStatement pStatement=connection.prepareStatement(updateQuery);
 		pStatement.setString(1, nRoomType);
 		pStatement.setDouble(2, nPrice);
 		pStatement.setInt(3, RoomNumber);
