@@ -27,12 +27,14 @@ public class Login {
 				if (role.equalsIgnoreCase("Admin")) {
 					
 					Admin.AdminMenu(con, scanner);
+					
 				} else if (role.equalsIgnoreCase("Front_Office")) {
 					System.out.println("Welcome to HospiCore Front Office");
 					int choice;
 					do {
 
 						System.out.println("1.Booking");
+						
 						System.out.println("2.Check out");
 
 						System.out.println("3.Exit");
@@ -167,6 +169,7 @@ public class Login {
 			System.out.println(e.getMessage());
 
 		}
+		
 
 	}
 }

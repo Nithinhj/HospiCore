@@ -1,5 +1,6 @@
 package Hospicore;
 
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -23,7 +24,7 @@ public class Admin {
 				break;
 				
 				case 2:
-					System.out.println("Booking module coming soon");
+					showbookingMenu(con,scanner);
 break;
 				case 3:
 					System.out.println("Exitinig");
@@ -75,5 +76,44 @@ break;
 		
 	} while (subChoice!=5);
 	 
+ }
+ public static void  showbookingMenu(Connection con, Scanner scanner) throws SQLException {
+	 int choice;
+	 do {
+		 System.out.println("1. Show Available Room");
+		 System.out.println("2. Book Room");
+		 System.out.println("3.Delete Booking");
+		 System.out.println("4.update Booking");
+		 System.out.println("5.Exit");
+		 choice=scanner.nextInt();
+
+switch (choice) {
+case 1:
+	BookingManagement.viewAvailableRoom(con);
+	
+	break;
+case 2:
+	BookingManagement.booking(con, scanner);
+	break;
+case 3:
+	System.out.println("Coming Soon");
+	break;
+case 4:
+	System.out.println("Coming Soon");
+	break;
+	case 5:
+		System.out.println("Exiting...");
+		break;
+
+
+
+default:
+	break;
+}
+
+
+
+		
+	} while (choice!=5);
  }
 }
