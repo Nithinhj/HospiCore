@@ -82,9 +82,10 @@ break;
 	 do {
 		 System.out.println("1. Show Available Room");
 		 System.out.println("2. Book Room");
-		 System.out.println("3.Delete Booking");
-		 System.out.println("4.update Booking");
-		 System.out.println("5.Exit");
+		 System.out.println("3. View Booking");
+		 System.out.println("4.Delete Booking");
+		 System.out.println("5.update Booking");
+		 System.out.println("6.Exit");
 		 choice=scanner.nextInt();
 
 switch (choice) {
@@ -96,7 +97,7 @@ case 2:
 	BookingManagement.booking(con, scanner);
 	break;
 case 3:
-	System.out.println("Coming Soon");
+	BookingManagement.viewBooking(con);
 	break;
 case 4:
 	System.out.println("Coming Soon");

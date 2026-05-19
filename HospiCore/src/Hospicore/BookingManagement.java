@@ -103,4 +103,27 @@ public class BookingManagement {
 					System.out.println("Room is not Available or not cleaned");
 				}
 	}
+	
+	public static void viewBooking( Connection con) throws SQLException {
+		String viewQuery="select * from booking";
+		PreparedStatement pStatement=con.prepareStatement(viewQuery);
+		ResultSet rSet=pStatement.executeQuery();
+	System.out.println(".........................................................................................................................................................................");
+
+		System.out.printf("%-15s %-15s %-20s %-15s %-15s %-15s %-15s\n", "Booking Id","Booking Name","Phone Number","Room Number","Check in Date","Check Out Date","Status");
+		System.out.println(".........................................................................................................................................................................");
+		while(rSet.next()) {
+		System.out.printf("%-15d %-15s %-20s %-15s %-15s %-15s %-15s\n" ,rSet.getInt("Booking_Id"),rSet.getString("Booking_name"),rSet.getString("Phone_number"),rSet.getInt("Room_number"),rSet.getString("Check_in_date"),rSet.getString("Check_out_date"),rSet.getString("Status"));
+
+		System.out.println(".........................................................................................................................................................................");
+		}
+
+		
+	}
+	
+	public static void DeleteBooking (Connection con, Scanner scanner) throws SQLException {
+		
+		
+		
+	}
 }
