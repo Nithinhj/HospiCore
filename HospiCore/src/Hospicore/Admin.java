@@ -100,7 +100,7 @@ case 3:
 	BookingManagement.viewBooking(con);
 	break;
 case 4:
-	System.out.println("Coming Soon");
+	BookingManagement.cancelBooking(con, scanner);
 	break;
 	case 5:
 		System.out.println("Exiting...");

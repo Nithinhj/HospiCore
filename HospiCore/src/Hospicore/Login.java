@@ -29,38 +29,9 @@ public class Login {
 					Admin.AdminMenu(con, scanner);
 					
 				} else if (role.equalsIgnoreCase("Front_Office")) {
-					System.out.println("Welcome to HospiCore Front Office");
-					int choice;
-					do {
-
-						System.out.println("1.Booking");
-						
-						System.out.println("2.Check out");
-
-						System.out.println("3.Exit");
-						System.out.println("Enter your Choice");
-						choice = scanner.nextInt();
-						switch (choice) {
-
-						case 1:
-
-							break;
-						case 2:
-							break;
-						case 3:
-							System.out.println("Exiting...");
-
-							break;
-
-						default:
-							System.out.println("Invalid choice");
-
-							break;
-						}
-
-					} while (choice != 3);
+					FrontOfficeManagement.frontOfficeMenu(con, scanner);
+					
 				}
-
 				else if (role.equalsIgnoreCase("House_Keepng")) {
 					System.out.println("Welcome to HospiCore House Keeping");
 					int choice;

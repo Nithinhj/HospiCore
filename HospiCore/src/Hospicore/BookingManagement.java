@@ -121,9 +121,85 @@ public class BookingManagement {
 		
 	}
 	
-	public static void DeleteBooking (Connection con, Scanner scanner) throws SQLException {
+	/*public static void DeleteBooking (Connection con, Scanner scanner) throws SQLException {
+		System.out.println("Enter the booking id you need to Cancel");
+		int bookingId=scanner.nextInt();
+		System.out.println("Enter the reason to Cancel Booking");
+		scanner.nextLine();
+		String reason=scanner.nextLine();
+		String updateCannccelReason="update booking set Status =?,Remarks =? where Booking_Id =?";
+		PreparedStatement pStatement=con.prepareStatement(updateCannccelReason);
+		pStatement.setInt(3, bookingId);
+		pStatement.setString(1, "Cancelled");
+		pStatement.setString(2, reason);
+	
+		int deleteRows=pStatement.executeUpdate();
+		
+		if (deleteRows>0) {
+			System.out.println("Cancelled successfully");
+
+			
+		}else {
+			System.out.println("Cancellation failed.");
+
+		}
+
+//cancellation working but not updating room availability
 		
 		
 		
+	}*/
+	public static void cancelBooking(Connection con, Scanner scanner) throws SQLException {
+
+	    System.out.println("Enter the booking id you need to Cancel");
+	    int bookingId = scanner.nextInt();
+	    scanner.nextLine();
+
+	    System.out.println("Enter the reason to Cancel Booking");
+	    String reason = scanner.nextLine();
+
+	    String findQuery = "select Room_number from booking where Booking_Id=? and Status='Booked'";
+
+	    PreparedStatement pStatement = con.prepareStatement(findQuery);
+	    pStatement.setInt(1, bookingId);
+
+	    ResultSet rSet = pStatement.executeQuery();
+
+	    if (rSet.next()) {
+
+	        int roomNumber = rSet.getInt("Room_number");
+
+	        String updateQuery = "update booking set Status=?, Remarks=? where Booking_Id=?";
+
+	        PreparedStatement pStatement2 = con.prepareStatement(updateQuery);
+	        pStatement2.setString(1, "Cancelled");
+	        pStatement2.setString(2, reason);
+	        pStatement2.setInt(3, bookingId);
+
+	        int cancelRows = pStatement2.executeUpdate();
+
+	        if (cancelRows > 0) {
+
+	            String roomAvailableSetQueryString = "update room set is_available=true where Room_Number=?";
+
+	            PreparedStatement pStatement3 = con.prepareStatement(roomAvailableSetQueryString);
+	            pStatement3.setInt(1, roomNumber);
+
+	            int roomAvailable = pStatement3.executeUpdate();
+
+	            if (roomAvailable > 0) {
+	                System.out.println("Cancellation is successful. Room is available now");
+	            } else {
+	                System.out.println("Cancellation successful, but room availability not updated");
+	            }
+
+	        } else {
+	            System.out.println("Cancellation failed");
+	        }
+
+	    } else {
+	        System.out.println("Booking not found or already cancelled");
+	    }
 	}
 }
+
