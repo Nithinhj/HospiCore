@@ -29,79 +29,138 @@ public class BookingManagement {
 
 	}
 
-	public static void booking(Connection con, Scanner scanner ) throws SQLException {
-		scanner.nextLine();
-		System.out.println("Enter Guest Name");
-		String guestNameString=scanner.nextLine();
-		
-				System.out.println("Enter phone Number");
-				String phoneNumber=scanner.nextLine();
-				System.out.println("Enter room Number");
-				int roomNumber=scanner.nextInt();
-				scanner.nextLine();
-				System.out.println("Enter check in date");
-				String checkInDateString= scanner.nextLine();
-				System.out.println("Enter check out date ");
-				String checkOutDate=scanner.nextLine();
-				String checkQuery="select * from room where Room_Number=? and is_available=true and is_clean=true";
-				
-				PreparedStatement checkStmnt=con.prepareStatement(checkQuery);
-				checkStmnt.setInt(1, roomNumber);
-				ResultSet rSet=checkStmnt.executeQuery();
-				
-			
-				if (rSet.next()) {
-					
-						
-						
+	public static void booking(Connection con, Scanner scanner) throws SQLException {
 
+	    scanner.nextLine();
 
-						String BookingQuery="insert into booking (Booking_name,Phone_number,Room_number,Check_in_date,Check_out_date,Status)values(?,?,?,?,?,?)";
-						
-						
-						PreparedStatement pStatement=con.prepareStatement(BookingQuery);
-						pStatement.setString(1, guestNameString);
-						pStatement.setString(2, phoneNumber);
-						pStatement.setInt(3,roomNumber);
-						pStatement.setString(4, checkInDateString);
-						pStatement.setString(5, checkOutDate);
-						pStatement.setString(6,"Booked");
-					
-						
-						int BookingRows=pStatement.executeUpdate();
-						if (BookingRows>0) {
-							String updateRoomAvailability="update room set is_available=false where Room_Number=?";
-							
-							PreparedStatement pStatement2=con.prepareStatement(updateRoomAvailability);
-							pStatement2.setInt(1, roomNumber);
-						
-							int roomRows=pStatement2.executeUpdate();
-							if (roomRows>0) {
-								System.out.println("Booking Successfull");
+	    System.out.println("Enter Guest Name");
+	    String guestNameString = scanner.nextLine();
 
-								
-							}
-							else {
-								System.out.println("Booking Updated but room availability is not updated");
+	    System.out.println("Enter Phone Number");
+	    String phoneNumber = scanner.nextLine();
 
-							}
-							
+	    System.out.println("Enter Room Number");
+	    int roomNumber = scanner.nextInt();
 
-							
-							
-						}
-						else {
-							System.out.println("Booking Failed");
+	    scanner.nextLine();
 
-						}
-											
-					
-				}
-				
-				
-				else {
-					System.out.println("Room is not Available or not cleaned");
-				}
+	    System.out.println("Enter Check In Date (yyyy-mm-dd)");
+	    String checkInDateString = scanner.nextLine();
+
+	    System.out.println("Enter Check Out Date (yyyy-mm-dd)");
+	    String checkOutDate = scanner.nextLine();
+
+	    String checkQuery =
+	            "select * from room "
+	            + "where Room_Number=? "
+	            + "and is_available=true "
+	            + "and is_clean=true";
+
+	    PreparedStatement checkStmnt =
+	            con.prepareStatement(checkQuery);
+
+	    checkStmnt.setInt(1, roomNumber);
+
+	    ResultSet rSet = checkStmnt.executeQuery();
+
+	    if (rSet.next()) {
+
+	        // INSERT GUEST
+
+	        String guestQuery =
+	                "insert into guest "
+	                + "(guest_name, phone) "
+	                + "values(?, ?)";
+
+	        PreparedStatement guestStatement =
+	                con.prepareStatement(
+	                        guestQuery,
+	                        PreparedStatement.RETURN_GENERATED_KEYS
+	                );
+
+	        guestStatement.setString(1, guestNameString);
+	        guestStatement.setString(2, phoneNumber);
+
+	        int guestRows = guestStatement.executeUpdate();
+
+	        int guestId = 0;
+
+	        if (guestRows > 0) {
+
+	            ResultSet generatedKeys =
+	                    guestStatement.getGeneratedKeys();
+
+	            if (generatedKeys.next()) {
+
+	                guestId = generatedKeys.getInt(1);
+
+	            }
+
+	        }
+
+	        // INSERT BOOKING
+
+	        String bookingQuery =
+	                "insert into booking "
+	                + "(guest_id, Room_number, "
+	                + "Check_in_date, Check_out_date, Status) "
+	                + "values(?,?,?,?,?)";
+
+	        PreparedStatement pStatement =
+	                con.prepareStatement(bookingQuery);
+
+	        pStatement.setInt(1, guestId);
+	        pStatement.setInt(2, roomNumber);
+
+	        pStatement.setString(3, checkInDateString);
+	        pStatement.setString(4, checkOutDate);
+
+	        pStatement.setString(5, "Booked");
+
+	        int bookingRows = pStatement.executeUpdate();
+
+	        if (bookingRows > 0) {
+
+	            // UPDATE ROOM AVAILABILITY
+
+	            String updateRoomAvailability =
+	                    "update room "
+	                    + "set is_available=false "
+	                    + "where Room_Number=?";
+
+	            PreparedStatement pStatement2 =
+	                    con.prepareStatement(updateRoomAvailability);
+
+	            pStatement2.setInt(1, roomNumber);
+
+	            int roomRows = pStatement2.executeUpdate();
+
+	            if (roomRows > 0) {
+
+	                System.out.println("Booking Successful");
+	                System.out.println("Generated Guest ID: " + guestId);
+
+	            } else {
+
+	                System.out.println(
+	                        "Booking updated but room availability not updated"
+	                );
+
+	            }
+
+	        } else {
+
+	            System.out.println("Booking Failed");
+
+	        }
+
+	    } else {
+
+	        System.out.println(
+	                "Room is not available or not cleaned"
+	        );
+
+	    }
 	}
 	
 	public static void viewBooking( Connection con) throws SQLException {
@@ -200,6 +259,49 @@ public class BookingManagement {
 	    } else {
 	        System.out.println("Booking not found or already cancelled");
 	    }
+	}
+	public static void checkOut (Connection con,Scanner scanner) throws SQLException {
+		System.out.println(".............Guest Check Out.............");
+		System.out.println("Enter Booking Id");
+
+		int bookingId=scanner.nextInt();
+		String fetchQuery="select Room_number from booking where Booking_Id=?";
+		PreparedStatement fetchStatement =con.prepareStatement(fetchQuery);
+		fetchStatement.setInt(1, bookingId);
+		ResultSet rSet =fetchStatement.executeQuery();
+		if (rSet.next()) {
+			int roomNumber=rSet.getInt("Room_number");
+			String UpdateBookingQuery="update booking set Status =? where Booking_Id=?";
+			PreparedStatement bookingQueryUpdateStatement=con.prepareStatement(UpdateBookingQuery);
+			bookingQueryUpdateStatement.setString(1, "Check Out");
+			bookingQueryUpdateStatement.setInt(2, bookingId);
+		
+		int bookingStatus=bookingQueryUpdateStatement.executeUpdate();
+		String updateRoom="update room set is_available=false,is_clean=false where Room_Number=?";
+		PreparedStatement roomUpdateStatement=con.prepareStatement(updateRoom);
+		roomUpdateStatement.setInt(1,roomNumber );
+			
+			int roomUpdateRows=roomUpdateStatement.executeUpdate();
+			
+			if (bookingStatus>0&&roomUpdateRows>0) {
+				System.out.println("Check Out is successfull");
+				System.out.println("Room marked for house keeping to clean");
+
+
+				
+			}
+			else {
+				System.out.println("Check out failed");
+
+			}
+			
+		}
+		else {
+			System.out.println("Booking Id not found");
+
+		}
+		
+
 	}
 }
 

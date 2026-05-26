@@ -40,11 +40,11 @@ public class FrontOfficeManagement {
                    BillingManagement.GenerateFrontOfficeBill(con, scanner);
 
                 case 5:
-                    // BillingManagement.viewFrontOfficeBills(con);
+                   BillingManagement.viewFrontOfficeBill(con);
                     break;
 
                 case 6:
-                    // BookingManagement.checkOutGuest(con, scanner);
+                    BookingManagement.checkOut(con, scanner);
                     break;
 
                 case 7:
